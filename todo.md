@@ -1,17 +1,16 @@
-Features:
+# Features:
 
-#Video:
-FPS
-Bitrate
-Extract channel
-Change encoding
-Sart/Stop time
-Change Resolution/Aspect Ratio
-Filters*
+## Video:
+[ ] FPS
+[ ] Bitrate
+[ ] Extract channel
+[ ] Change encoding
+[ ] Start/Stop time
+[ ] Change Resolution/Aspect Ratio
+[ ] Filters*
 
-Render as frames*
+[ ] Render as frames*
 
-#Audio
-Bitrate
-Choose format
-
+## Audio
+[ ] Bitrate
+[ ] Choose format
