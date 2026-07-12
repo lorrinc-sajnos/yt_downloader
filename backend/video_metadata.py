@@ -66,5 +66,22 @@ class VideoMetadata:
             response = client.get(self.thumbnail_url, follow_redirects=True)
             response.raise_for_status()
 
-            with open("backend/src/thumbnail.jpeg", "wb") as f:
+            with open("temp_video_files/thumbnail.jpeg", "wb") as f:
                 f.write(response.content)
+                
+    def download_video(self):
+        ydl_opts = {
+                'format': 'bestvideo+bestaudio/best',
+                'outtmpl': 'temp_video_files/video.%(ext)s',
+                'quiet': False
+            }
+        
+        #Letting the library combine audio and video streams to the best format it can
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(self.url, download=True)
+            if 'requested_downloads' in info and info['requested_downloads']:
+                filename = info['requested_downloads'][0]['filepath']
+            else:
+                filename = ydl.prepare_filename(info)
+            
+        return filename

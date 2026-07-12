@@ -3,11 +3,13 @@
 ## Video:
 [ ] FPS
 [ ] Bitrate
-[ ] Extract channel
 [ ] Change encoding
 [ ] Start/Stop time
 [ ] Change Resolution/Aspect Ratio
-[ ] Filters*
+
+### Filters
+    *Color channel mixing
+    *
 
 [ ] Render as frames*
 
