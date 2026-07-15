@@ -7,7 +7,7 @@ import subprocess
 from flask import Flask, jsonify, request, send_file
 import msgspec
 
-import globals
+import global_var
 from render import RenderJob, RenderSettings
 from video_metadata import VideoMetadata
 app = Flask(__name__)
@@ -34,12 +34,27 @@ def fetch_video():
     
     metadata.download_thumbnail()
     
-    globals.CURRENT_VIDEO = metadata
+    global_var.CURRENT_VIDEO = metadata
     return jsonify(
         {
-            "metadata" : asdict(globals.CURRENT_VIDEO)
+            "metadata" : asdict(global_var.CURRENT_VIDEO)
         }
     ), 201
+
+@app.route('/get-video-metadata', methods=['GET'])
+def get_metadata():
+    if global_var.CURRENT_VIDEO is not None:
+        return jsonify(
+            {
+                "metadata" : asdict(global_var.CURRENT_VIDEO)
+            }
+        ), 201
+    else:
+        return jsonify(
+          {
+              "metadata" : None
+          }  
+        ), 400
 
 OUTPUT_ROOT = "temp_video_files/output"
 @app.route('/start-render', methods=['POST'])
@@ -52,9 +67,9 @@ def render():
         print('JSON was expected, deafulting to empty settings!')
         settings = RenderSettings()
     
-    globals.CURRENT_RENDER = RenderJob(metadata = globals.CURRENT_VIDEO, output_p=OUTPUT_ROOT, settings = settings)
+    global_var.CURRENT_RENDER = RenderJob(metadata = global_var.CURRENT_VIDEO, output_p=OUTPUT_ROOT, settings = settings)
     
-    globals.CURRENT_RENDER.start_render()
+    global_var.CURRENT_RENDER.start_render()
     
     return jsonify(
         {
@@ -64,7 +79,7 @@ def render():
     
 @app.route('/get-render-status', methods=['GET'])
 def get_status():
-    if globals.CURRENT_RENDER is None:
+    if global_var.CURRENT_RENDER is None:
         return jsonify(
             {
                 "error" : "RenderJob does not yet exsist!"
@@ -73,14 +88,14 @@ def get_status():
     
     return jsonify(
         {
-            "status" : globals.CURRENT_RENDER.get_status().value
+            "status" : global_var.CURRENT_RENDER.get_status().value
         }
     ), 200
 
 
 @app.route('/download-video', methods=['GET'])
 def donwload_video():
-    return send_file(globals.CURRENT_RENDER.get_output_path(), as_attachment=True)
+    return send_file(global_var.CURRENT_RENDER.get_output_path(), as_attachment=True)
 
     
 

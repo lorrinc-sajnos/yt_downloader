@@ -3,6 +3,7 @@ import json
 from flask import jsonify
 import httpx
 import yt_dlp
+import global_var
 
 @dataclass
 class VideoMetadata:
@@ -66,7 +67,7 @@ class VideoMetadata:
             response = client.get(self.thumbnail_url, follow_redirects=True)
             response.raise_for_status()
 
-            with open("temp_video_files/thumbnail.jpeg", "wb") as f:
+            with open(str(global_var.PROJECT_ROOT)+"/frontend/public/temp/thumbnail.jpeg", "wb") as f:
                 f.write(response.content)
                 
     def download_video(self):

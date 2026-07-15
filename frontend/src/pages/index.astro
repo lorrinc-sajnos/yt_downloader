@@ -1,0 +1,318 @@
+---
+// index.astro
+
+// import "../scripts/client";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello World</title>
+    <style>
+      /*#region Fonts*/
+      @font-face {
+        font-family: "HK Grotesk";
+        src: url("/fonts/HKGrotesk/HKGrotesk-Light.otf") format("opentype");
+        font-weight: 300;
+        font-style: normal;
+      }
+
+      @font-face {
+        font-family: "HK Grotesk";
+        src: url("/fonts/HKGrotesk/HKGrotesk-LightItalic.otf")
+          format("opentype");
+        font-weight: 300;
+        font-style: italic;
+      }
+
+      @font-face {
+        font-family: "HK Grotesk";
+        src: url("/fonts/HKGrotesk/HKGrotesk-Medium.otf") format("opentype");
+        font-weight: 500;
+        font-style: normal;
+      }
+
+      @font-face {
+        font-family: "HK Grotesk";
+        src: url("/fonts/HKGrotesk/HKGrotesk-MediumItalic.otf")
+          format("opentype");
+        font-weight: 500;
+        font-style: italic;
+      }
+
+      @font-face {
+        font-family: "HK Grotesk";
+        src: url("/fonts/HKGrotesk/HKGrotesk-Bold.otf") format("opentype");
+        font-weight: 700;
+        font-style: normal;
+      }
+
+      @font-face {
+        font-family: "HK Grotesk";
+        src: url("/fonts/HKGrotesk/HKGrotesk-BoldItalic.otf") format("opentype");
+        font-weight: 700;
+        font-style: italic;
+      }
+
+      @font-face {
+        font-family: "HK Grotesk";
+        src: url("/fonts/HKGrotesk/HKGrotesk-ExtraBold.otf") format("opentype");
+        font-weight: 800;
+        font-style: normal;
+      }
+
+      @font-face {
+        font-family: "Europa Grotesk";
+        src: url("/fonts/EuropaGrotesk/europa-grotesk-medium.ttf")
+          format("opentype");
+        font-weight: 500; /* this file IS the 700 weight */
+      }
+      /*#endregion */
+
+      :root {
+        --bg-color: #d3d2d2;
+      }
+
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-color);
+        font-family:
+          "HK Grotesk",
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      .page-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 2rem;
+      }
+
+      h1 {
+        font-family: "Europa Grotesk", system-ui, sans-serif;
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.02em;
+        font-weight: 500;
+      }
+
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.02em;
+        font-family: "HK Grotesk";
+        font-weight: 700;
+      }
+
+      button {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 8px;
+        border: none;
+        background: #6d28d9;
+        color: white;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        font-family:
+          "HK Grotesk",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        font-weight: 800;
+      }
+
+      button:hover {
+        background: #5b21b6;
+      }
+
+      
+      select{
+        width: 6rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 16px; /* pill shape */
+        font-size: 1rem;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        font-family: "HK Grotesk";
+        font-weight: 500;
+      }
+
+
+      .fetch-card {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.5rem;
+      }
+
+      .title-card {
+        text-align: center;
+        color: #353535;
+        font-family: "Europa Grotesk";
+      }
+
+      .text-input {
+        width: 30rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 16px; /* pill shape */
+        font-size: 1rem;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        font-family: "HK Grotesk";
+        font-weight: 300;
+      }
+
+      .thumbnail-card {
+        align-content: center;
+      }
+
+      .thumbnail {
+        width: 35vw;
+        border-radius: 16px;
+        object-fit: cover;
+        align-content: center;
+      }
+
+      /*Simple table*/
+      .simple-table {
+        width: 15vw;
+        border-collapse: separate;
+        border-spacing: 0;
+        /* border: 1px solid #585858; */
+        background-color: #ffffff;
+        border-radius: 10px;
+        overflow: hidden;
+        font-family: "HK Grotesk";
+        font-weight: 500;
+      }
+
+      .simple-table th,
+      .simple-table td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 10px solid var(--bg-color);
+      }
+
+      .simple-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      :global(.name) {
+        font-weight: 700;
+      }
+      :global(.value) {
+        font-weight: 300;
+      }
+
+      /*Loading Button*/
+      .loading-btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 120px;
+      }
+      .loading-btn.is-loading {
+        background: #461a8d;
+      }
+
+      .loading-btn .spinner {
+        display: none;
+        width: 1em;
+        height: 1em;
+        border: 2px solid currentColor;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+
+      .loading-btn.is-loading .btn-text {
+        visibility: hidden;
+      }
+
+      .loading-btn.is-loading .spinner {
+        display: block;
+        position: absolute;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .compact-input{
+        flex-direction: row;
+      }
+
+      #res-select{
+        width: 15rem;
+
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-container">
+      <div class="title-card">
+        <h1>Video Downloader</h1>
+      </div>
+      <div class="fetch-card">
+        <input
+          id="fetch-url-field"
+          type="text"
+          placeholder="https://www.youtube.com/example-video-url"
+          class="text-input"
+        />
+        <button id="fetch-url-button" type="button" class="loading-btn">
+          <span class="btn-text">Fetch video</span>
+          <span class="spinner" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <div class="thumbnail-card">
+        <img id="thumbnail" alt="My image" class="thumbnail" />
+        <h2 id="title-header"></h2>
+      </div>
+
+      <div id="metadata-card-id" class="metadata-card">
+      </div>
+
+      <div id="input-field-card" class="input-field-card"></div>
+
+
+      <div class="compact-input" id="compact-input">
+        
+        <table id="metadata-table" class="simple-table">
+          <thead> </thead>
+          <tbody> </tbody>
+        </table>
+        <select id="output-format-select" name="output-format">
+        </select>
+        <select id="res-select" name="res-format">
+        </select>
+        <button id="start-render-button" type="button" class="loading-btn">
+          <span class="btn-text">Start Render</span>
+          <span class="spinner" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
+<script type="module">
+  import "../scripts/client";
+</script>
