@@ -1,6 +1,8 @@
 
 from dataclasses import dataclass
 from enum import Enum
+import glob
+import os
 import subprocess
 import threading
 import time
@@ -72,7 +74,9 @@ class RenderSettings:
         cmd.extend(["-y", output_file])
         return cmd
 
+
 class RenderStatus(Enum):
+    NONE = 'NONE',
     PENDING = 'PENDING'
     RUNNING = 'RUNNING'
     ERROR = 'ERROR'
@@ -100,8 +104,11 @@ class RenderJob:
         with self._lock:
             return self._status
 
-    def get_output_path(self):
+    def get_output_file(self):
         return str(global_var.PROJECT_ROOT)+"/"+self._output+self._settings.container
+    
+    def get_output_dir(self):
+        return str(global_var.PROJECT_ROOT)+"/"+self._output
 
     def start_render(self):
         thread = threading.Thread(
@@ -118,22 +125,55 @@ class RenderJob:
             render_video(self)
             self.set_status(RenderStatus.DONE)
         except Exception as e:
-            print('Render throw an exception!')
+            print(f'Render throw an exception!: {e}')
             self.set_status(RenderStatus.ERROR)
 
 
 def render_video(render_job: RenderJob):
-    input_file = render_job._metadata.download_video()
-    output_file = render_job.get_output_path()
+    #deletes old files
+    cleanup(global_var.TEMP_ROOT_STR)
 
-    cmd = render_job._settings.get_ffmpeg_cmd(input_file=input_file, output_file=output_file)
-    print(cmd)
+    DEBUG_start = time.time()
+    DEBUG_part_start = DEBUG_start
+
+    input_file = render_job._metadata.download_video()
+    output_file = render_job.get_output_file()
+
+    print(f"Video download time: {int(time.time()-DEBUG_start)*1000}ms")
+    DEBUG_part_start = time.time()
+
+    cmd = render_job._settings.get_ffmpeg_cmd(
+        input_file=input_file, output_file=output_file)
+
+    cmd += ["-nostats", "-loglevel", "error"]
+
+    # debug
     for part in cmd:
         print(part, end=' ')
 
     print("")
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(
+        cmd,
+        stdout=subprocess.DEVNULL,      # ffmpeg doesn't write video data to stdout, only logs
+        # keep only stderr, and only because we need it on failure
+        stderr=subprocess.PIPE,
+        text=True,
+    )
     print(result.returncode)
     if result.returncode != 0:
         raise RuntimeError(f"FFmpeg failed: {result.stderr}")
+
+    print(f"Render time: {int(time.time()-DEBUG_part_start)*1000}ms")
+    DEBUG_part_start = time.time()
+
+    print(f"Total time: {int(time.time()-DEBUG_start)*1000}ms")
     return output_file
+
+
+def cleanup(path: str):
+    patterns = [path+"output.*", path+"video.*"]
+
+    for pattern in patterns:
+        for filepath in glob.glob(pattern):
+            os.remove(filepath)
+            print(f"Deleted: {filepath}")

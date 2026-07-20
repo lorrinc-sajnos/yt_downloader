@@ -70,15 +70,21 @@
       }
       /*#endregion */
 
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
       :root {
         --bg-color: #d3d2d2;
       }
 
       body {
         margin: 0;
-        height: 100vh;
+        min-height: 100vh;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
         background: var(--bg-color);
         font-family:
@@ -133,8 +139,7 @@
         background: #5b21b6;
       }
 
-      
-      select{
+      select {
         width: 6rem;
         padding: 0.75rem 1rem;
         border: 1px solid #ddd;
@@ -147,7 +152,6 @@
         font-family: "HK Grotesk";
         font-weight: 500;
       }
-
 
       .fetch-card {
         display: flex;
@@ -178,32 +182,36 @@
       }
 
       .thumbnail-card {
-        align-content: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
       }
 
       .thumbnail {
+        display: block;
         width: 35vw;
         border-radius: 16px;
         object-fit: cover;
-        align-content: center;
+        margin: 0 auto;
       }
 
       /*Simple table*/
       .simple-table {
-        width: 15vw;
+        width: 17vw;
         border-collapse: separate;
         border-spacing: 0;
-        /* border: 1px solid #585858; */
         background-color: #ffffff;
-        border-radius: 10px;
+        border-radius: 16px;
         overflow: hidden;
         font-family: "HK Grotesk";
         font-weight: 500;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
       }
 
       .simple-table th,
       .simple-table td {
-        padding: 0.75rem 1rem;
+        padding: 1rem 1.1rem;
         text-align: left;
         border-bottom: 10px solid var(--bg-color);
       }
@@ -256,14 +264,164 @@
         }
       }
 
-      .compact-input{
+      .compact-input {
+        display: flex;
         flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
       }
 
-      #res-select{
+      #res-select {
         width: 15rem;
-
       }
+
+      #download-button {
+        background: #22af91;
+      }
+      #download-button.loading-btn.is-loading {
+        background: #14705c;
+      }
+      #download-button:hover {
+        background: #1c8b73;
+      }
+
+      .download-spinner {
+        width: 1em;
+        height: 1em;
+        border: 2px solid currentColor;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+
+        display: block;
+        position: absolute;
+      }
+
+      .metadata-card,
+      .input-field-card {
+        text-align: center;
+      }
+
+      #advanced-settigns-card {
+        text-align: center;
+        margin-top: 1.5rem;
+        width: 100%;
+        max-width: 26rem;
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 1.5rem 1.75rem 0.75rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+      }
+
+      #advanced-settigns-card h3 {
+        margin: 0 0 1.1rem;
+        font-family: "HK Grotesk";
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: #000000;
+      }
+
+      .setting-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        padding: 0.7rem 0;
+        border-bottom: 1px solid #efefef;
+      }
+
+      .setting-card:last-child {
+        border-bottom: none;
+      }
+
+      .setting-card span {
+        font-family: "HK Grotesk";
+        font-weight: 500;
+        font-size: 0.92rem;
+        color: #4a4a4a;
+        text-align: left;
+      }
+
+      #advanced-settigns-card span + input + span {
+        color: #b7b7b7;
+        font-weight: 300;
+        font-size: 0.85rem;
+      }
+
+      /*#region Toggle Switch*/
+      .settings-input {
+        width: 4rem;
+        padding: 0.45rem 0.6rem;
+        border: 1.5px solid #e2e2e2;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        text-align: center;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        font-family: "HK Grotesk";
+        font-weight: 500;
+        color: #353535;
+      }
+
+      .settings-input:hover {
+        border-color: #c9c9c9;
+        background: #c9c9c9;
+      }
+      .settings-input:focus {
+        border-color: #c9c9c9;
+        background: #c9c9c9;
+        box-shadow: 0 0 0 3px #e6e5e5;
+      }
+
+      .settings-input::placeholder {
+        color: #c2c2c2;
+        font-weight: 300;
+      }
+
+      .toggle-switch {
+        display: inline-flex;
+        background: #e2e2e2;
+        border-radius: 999px;
+        padding: 4px;
+        gap: 4px;
+      }
+
+      .toggle-option {
+        border: none;
+        background: transparent;
+        padding: 0.5rem 1.4rem;
+        border-radius: 999px;
+        font-family: "HK Grotesk";
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: #7a7a7a;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .toggle-option:hover:not(.is-active) {
+        color: #4a4a4a;
+      }
+
+      .toggle-option.is-active {
+        background: #ffffff;
+        color: #353535;
+        font-weight: 700;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+
+      .codec {
+        width: 9rem;
+      }
+
+      /*#endregion*/
     </style>
   </head>
   <body>
@@ -289,27 +447,92 @@
         <h2 id="title-header"></h2>
       </div>
 
-      <div id="metadata-card-id" class="metadata-card">
-      </div>
+      <div id="metadata-card-id" class="metadata-card"></div>
 
-      <div id="input-field-card" class="input-field-card"></div>
-
-
-      <div class="compact-input" id="compact-input">
-        
+      <div id="input-field-card" class="input-field-card">
         <table id="metadata-table" class="simple-table">
           <thead> </thead>
           <tbody> </tbody>
         </table>
-        <select id="output-format-select" name="output-format">
-        </select>
-        <select id="res-select" name="res-format">
-        </select>
-        <button id="start-render-button" type="button" class="loading-btn">
-          <span class="btn-text">Start Render</span>
+      </div>
+
+      <div class="compact-input" id="compact-input">
+        <select id="output-format-select" name="output-format"> </select>
+        <select id="res-select" name="res-format"> </select>
+        <button id="download-button" type="button" class="loading-btn">
+          <span class="btn-text">Download</span>
           <span class="spinner" aria-hidden="true"></span>
         </button>
       </div>
+
+      <div class="toggle-switch" id="mode-toggle">
+        <button type="button" class="toggle-option is-active" data-value="a"
+          >A</button
+        >
+        <button type="button" class="toggle-option" data-value="b">B</button>
+      </div>
+      <div id="advanced-settigns-card">
+        <h3>Advanced settings:</h3>
+        <div class="setting-card">
+          <span>FPS:</span>
+          <input
+            id="set-fps"
+            type="text"
+            placeholder="30"
+            class="settings-input"
+          />
+        </div>
+        <div class="setting-card">
+          <span>Start:</span>
+          <input
+            id="set-start"
+            type="text"
+            placeholder="00:00"
+            class="settings-input"
+          />
+        </div>
+        <div class="setting-card">
+          <span>Length:</span>
+          <input
+            id="set-length"
+            type="text"
+            placeholder="00:00"
+            class="settings-input"
+          />
+        </div>
+
+        <div class="setting-card">
+          <span>Resolution:</span>
+          <input
+            id="set-res-x"
+            type="text"
+            placeholder=""
+            class="settings-input"
+          />
+
+          <span>x</span>
+          <input
+            id="set-res-y"
+            type="text"
+            placeholder="480"
+            class="settings-input"
+          />
+        </div>
+
+        <div class="setting-card">
+          <span>Video codec:</span>
+          <select id="vc-select" class="codec"> </select>
+        </div>
+        <div class="setting-card">
+          <span>Audio codec:</span>
+          <select id="ac-select" class="codec"> </select>
+        </div>
+        <div class="setting-card">
+          <span>Color effects:</span>
+          <select id="cl-ch-select" class="codec"> </select>
+        </div>
+      </div>
+      <!--End of page -->
     </div>
   </body>
 </html>

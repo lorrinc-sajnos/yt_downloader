@@ -8,7 +8,7 @@ from flask import Flask, jsonify, request, send_file
 import msgspec
 
 import global_var
-from render import RenderJob, RenderSettings
+from render import RenderJob, RenderSettings, RenderStatus, cleanup
 from video_metadata import VideoMetadata
 app = Flask(__name__)
 
@@ -82,7 +82,7 @@ def get_status():
     if global_var.CURRENT_RENDER is None:
         return jsonify(
             {
-                "error" : "RenderJob does not yet exsist!"
+                "status" : RenderStatus.NONE.value
             }
         ), 400
     
@@ -95,9 +95,13 @@ def get_status():
 
 @app.route('/download-video', methods=['GET'])
 def donwload_video():
-    return send_file(global_var.CURRENT_RENDER.get_output_path(), as_attachment=True)
+    return send_file(global_var.CURRENT_RENDER.get_output_file(), as_attachment=True)
 
     
 
 if __name__ == '__main__':
+    
+    cleanup(global_var.TEMP_ROOT_STR)
+    
+    
     app.run(debug=True)
